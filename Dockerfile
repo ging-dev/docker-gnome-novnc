@@ -17,7 +17,9 @@ RUN apt-get update && \
     gnome-terminal \
     firefox-esr \
     tigervnc-standalone-server \
-    python3-numpy
+    python3-numpy \
+    sassc \
+    libglib2.0-dev-bin
 
 RUN useradd -m -s /bin/bash $USER && \
     echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -31,6 +33,22 @@ ENV LC_ALL=en_US.UTF-8
 
 USER $USER
 WORKDIR $HOME
+
+RUN mkdir -p .config/gtk-4.0 && \
+    git clone --depth 1 https://github.com/vinceliuice/Mojave-gtk-theme.git && \
+    git clone --depth 1 https://github.com/vinceliuice/MacTahoe-icon-theme.git && \
+    cd $HOME/Mojave-gtk-theme && ./install.sh -l && \
+    cd $HOME/MacTahoe-icon-theme && ./install.sh
+RUN rm -rf Mojave-gtk-theme MacTahoe-icon-theme
+
+RUN export $(dbus-launch) && \
+    gsettings set org.gnome.desktop.interface gtk-theme Mojave-Light && \
+    gsettings set org.gnome.desktop.interface icon-theme MacTahoe-light && \
+    gsettings set org.gnome.desktop.wm.preferences button-layout close,minimize,maximize:
+
+RUN mkdir .config/tigervnc && \
+    touch .config/tigervnc/passwd && \
+    sudo chmod 600 .config/tigervnc/passwd
 
 RUN git clone --depth 1 https://github.com/novnc/noVNC.git
 
