@@ -32,9 +32,10 @@ ENV LC_ALL=en_US.UTF-8
 USER $USER
 WORKDIR $HOME
 
+RUN git clone --depth 1 https://github.com/novnc/noVNC.git
+
 COPY entrypoint.sh entrypoint.sh
 RUN sudo chmod +x entrypoint.sh
-RUN git clone --depth 1 https://github.com/novnc/noVNC.git
 
 ENTRYPOINT [ "/home/vncuser/entrypoint.sh" ]
 EXPOSE 6080
