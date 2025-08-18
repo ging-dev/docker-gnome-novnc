@@ -1,7 +1,9 @@
 FROM debian:latest
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    DISPLAY=:1 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
     USER=vncuser \
     HOME=/home/vncuser
 
@@ -21,15 +23,12 @@ RUN apt-get update && \
     sassc \
     libglib2.0-dev-bin
 
-RUN useradd -m -s /bin/bash $USER && \
-    echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
-ENV LANG=en_US.UTF-8  
-ENV LANGUAGE=en_US:en  
-ENV LC_ALL=en_US.UTF-8
+
+RUN useradd -m -s /bin/bash $USER && \
+    echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER $USER
 WORKDIR $HOME
@@ -44,7 +43,8 @@ RUN rm -rf Mojave-gtk-theme MacTahoe-icon-theme
 RUN export $(dbus-launch) && \
     gsettings set org.gnome.desktop.interface gtk-theme Mojave-Light && \
     gsettings set org.gnome.desktop.interface icon-theme MacTahoe-light && \
-    gsettings set org.gnome.desktop.wm.preferences button-layout close,minimize,maximize:
+    gsettings set org.gnome.desktop.wm.preferences button-layout close,minimize,maximize: && \
+    gsettings set org.gnome.desktop.screensaver lock-enabled false
 
 RUN mkdir .config/tigervnc && \
     touch .config/tigervnc/passwd && \
