@@ -19,6 +19,7 @@ RUN apt-get update && \
     gnome-terminal \
     firefox-esr \
     tigervnc-standalone-server \
+    novnc \
     python3-numpy \
     sassc \
     libglib2.0-dev-bin
@@ -50,10 +51,8 @@ RUN mkdir .config/tigervnc && \
     touch .config/tigervnc/passwd && \
     sudo chmod 600 .config/tigervnc/passwd
 
-RUN git clone --depth 1 https://github.com/novnc/noVNC.git
+COPY start.sh start.sh
+RUN sudo chmod +x start.sh
 
-COPY entrypoint.sh entrypoint.sh
-RUN sudo chmod +x entrypoint.sh
-
-ENTRYPOINT [ "/home/vncuser/entrypoint.sh" ]
+CMD [ "/home/vncuser/start.sh" ]
 EXPOSE 6080
