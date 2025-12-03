@@ -14,6 +14,7 @@ RUN apt-get update && \
     wget \
     dbus-x11 \
     desktop-base \
+    dumb-init \
     gnome-session-flashback \
     nautilus \
     gnome-terminal \
