@@ -2,9 +2,9 @@ version: "3.3"
 
 services:
   gnome:
-    build: .
+    image: gingdev/gnome-vnc
     ports:
       - "8080:6080"
     environment:
       GEOMETRY: 1920x1080
-      VNC_PASSWORD: tranthanh
+      VNC_PASSWORD: ${VNC_PASSWORD:-admin}
